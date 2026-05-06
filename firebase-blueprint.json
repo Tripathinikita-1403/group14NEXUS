@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "NexusConfig": {
+      "title": "Nexus Configuration",
+      "description": "Global configuration for Nexus features",
+      "type": "object",
+      "properties": {
+        "features": {
+          "type": "object",
+          "description": "Map of feature IDs to their status",
+          "properties": {
+            "neural_mentor": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "study_vault": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "strategic_command": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "constellation": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "combat_zone": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "simu_lab": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "mains_manifest": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } },
+            "mentorship": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "locked": { "type": "boolean" } } }
+          }
+        },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["features"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User specific data and role",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "role"]
+    }
+  },
+  "firestore": {
+    "/config/nexus": {
+      "schema": "NexusConfig",
+      "description": "Global Nexus feature toggles"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile and role"
+    }
+  }
+}

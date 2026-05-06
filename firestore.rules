@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: config
+    // Document ID: nexus
+    // Fields:
+    //   - features: map (required) - Map of feature IDs to {enabled: bool, locked: bool}
+    //   - updatedAt: timestamp (optional)
+    //   - updatedBy: string (optional)
+    //
+    // Collection: users
+    // Document ID: {userId}
+    // Fields:
+    //   - uid: string (required)
+    //   - name: string (required)
+    //   - role: string (required, enum: ['student', 'admin'])
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "mishraanantika12@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidNexusConfig(data) {
+      return data.features is map;
+    }
+
+    function isValidUser(data) {
+      return data.uid is string && 
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.role in ['student', 'admin'] &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /config/nexus {
+      allow read: if true; // Publicly readable so app can boot with config
+      allow write: if request.resource.data.adminSecret == 'ANP_ADMIN_SECRET_2024' || isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && 
+                    (request.resource.data.role == 'student' || isAdmin());
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) &&
+                    (request.resource.data.role == resource.data.role || isAdmin());
+    }
+  }
+}
