@@ -2,7 +2,7 @@
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
 import type { AIFeedback, UserContext, StudyContent, PracticeQuestion } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 const parseAIResponse = <T>(response: GenerateContentResponse): T => {
     const text = response.text;
