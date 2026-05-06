@@ -21,7 +21,7 @@ const parseAIResponse = <T>(response: GenerateContentResponse): T => {
 export const getEssayFeedback = async (essay: string): Promise<AIFeedback> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-2.0",
+            model: "gemini-2.0-flash",
             contents: `Analyze the following text/essay. Provide constructive feedback on: 1. Structure, 2. Content, 3. Clarity. Provide an overall score out of 10. Also provide a list of specific text segments to highlight with suggestions for improvement.
 
             Text: "${essay}"`,
