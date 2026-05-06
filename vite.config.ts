@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
-        allowedHosts: ['group14nexus.onrender.com']
+        allowedHosts: ['group14nexus-3.onrender.com']
       },
       plugins: [react(), tailwindcss()],
       define: {
