@@ -21,7 +21,7 @@ const parseAIResponse = <T>(response: GenerateContentResponse): T => {
 export const getEssayFeedback = async (essay: string): Promise<AIFeedback> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3.1-pro-preview",
+            model: "gemini-2.0",
             contents: `Analyze the following text/essay. Provide constructive feedback on: 1. Structure, 2. Content, 3. Clarity. Provide an overall score out of 10. Also provide a list of specific text segments to highlight with suggestions for improvement.
 
             Text: "${essay}"`,
@@ -72,7 +72,7 @@ export const getStrategicBriefing = async (context: UserContext): Promise<string
         }
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: prompt,
         });
 
@@ -88,7 +88,7 @@ export const getStudyMaterial = async (context: UserContext, topic: string): Pro
         const contextStr = `${context.detail} (${context.subCategory})`;
         
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `Generate comprehensive study material for the topic "${topic}" specifically for a student in: ${contextStr}.
             
             Return JSON matching this structure:
@@ -135,7 +135,7 @@ export const getPracticeQuestions = async (context: UserContext, topic: string):
         const contextStr = `${context.detail} (${context.subCategory})`;
         
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `Generate 5 multiple-choice practice questions for "${topic}" suitable for ${contextStr}.
             
             Return JSON array:
@@ -173,7 +173,7 @@ export const getGDTopic = async (context: UserContext): Promise<{ topic: string;
     try {
         const contextStr = `${context.detail} (${context.subCategory})`;
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `Generate a relevant Group Discussion topic and a brief background for a student in: ${contextStr}.
             
             Return JSON:
@@ -200,7 +200,7 @@ export const getGDTopic = async (context: UserContext): Promise<{ topic: string;
 export const getGDAgentResponse = async (topic: string, history: string, agentName: string): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `You are ${agentName} in a Group Discussion. 
             Topic: "${topic}"
             Discussion History:
@@ -223,7 +223,7 @@ export const getPsychTestScenario = async (context: UserContext, type: 'WAT' | '
         if (type === 'SRT') instruction = "Provide a challenging social or military situation for a Situation Reaction Test (SRT).";
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `${instruction} Context: ${context.detail}. Return JSON: { "prompt": "..." }`,
             config: {
                 responseMimeType: "application/json",
@@ -309,7 +309,7 @@ export const getCombatChallenge = async (context: UserContext, mode: string): Pr
         }
 
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `${prompt} Return JSON.`,
             config: {
                 responseMimeType: "application/json",
@@ -327,7 +327,7 @@ export const getCombatChallenge = async (context: UserContext, mode: string): Pr
 export const getBuddyHint = async (context: UserContext, topic: string, question: string): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash-preview",
+            model: "gemini-2.0-flash",
             contents: `You are a cute learning buddy. Provide a helpful, encouraging hint for the following question about "${topic}". 
             Question: "${question}"
             Keep it very short (1 sentence) and don't give away the answer directly.`,
@@ -344,7 +344,7 @@ export async function* getMentorResponseStream(history: { role: 'user' | 'model'
         const formattedHistory = history.map(msg => ({ role: msg.role, parts: msg.parts }));
 
         const chat = ai.chats.create({
-            model: 'gemini-2.0-flash-preview',
+            model: 'gemini-2.0-flash',
             history: formattedHistory,
             config: {
                 systemInstruction: `You are ${mentor.name}, a ${mentor.role}.
@@ -377,7 +377,7 @@ export async function* getTutorResponseStream(history: { role: 'user' | 'model',
         const formattedHistory = history.map(msg => ({ role: msg.role, parts: msg.parts }));
 
         const chat = ai.chats.create({
-            model: 'gemini-2.0-flash-preview',
+            model: 'gemini-2.0-flash',
             history: formattedHistory,
             config: {
                 systemInstruction: `You are 'Strategos', an advanced AI mentor.
@@ -411,7 +411,7 @@ export async function* getSimulationStream(context: UserContext, newMessage: str
         }));
 
         const chat = ai.chats.create({
-            model: 'gemini-2.0-flash-preview',
+            model: 'gemini-2.0-flash',
             history: formattedHistory,
             config: {
                 systemInstruction: `${systemInstruction}
